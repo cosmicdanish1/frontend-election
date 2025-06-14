@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -10,7 +10,17 @@ const SignupModal = ({ isOpen, onClose }) => {
     password: '',
     confirmPassword: ''
   });
+  const [osClass, setOsClass] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const platform = navigator.platform.toLowerCase();
+    if (platform.includes('mac')) {
+      setOsClass('os-mac');
+    } else if (platform.includes('win')) {
+      setOsClass('os-windows');
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,7 +75,7 @@ const SignupModal = ({ isOpen, onClose }) => {
           transition={{ duration: 0.3 }}
         >
           <motion.button 
-            className="close-button" 
+            className={`close-button ${osClass}`}
             onClick={onClose}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}

@@ -54,7 +54,7 @@ const FeatureCards = () => {
         {featureCardsData.map((card, index) => (
           <motion.div
             key={index}
-            className="feature-card"
+            className={`feature-card feature-card-gradient-${(index % 6) + 1}`}
             variants={cardVariants}
             initial="initial"
             animate="animate"
