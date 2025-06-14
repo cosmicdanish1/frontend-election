@@ -5,6 +5,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
+import FeatureCards from './components/FeatureCards';
 import './App.css';
 
 // Placeholder components for dashboards
@@ -67,6 +68,9 @@ const App = () => {
                 Get Started
               </motion.button>
             </motion.div>
+
+            <FeatureCards />
+
           </motion.div>
         </main>
 

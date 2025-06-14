@@ -57,7 +57,6 @@ body {
   animation: moveBackground 60s linear infinite;
   color: white;
   position: relative;
-  overflow: hidden;
 }
 
 body::before {
@@ -67,8 +66,8 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 30, 0.7);
-  backdrop-filter: blur(5px);
+  background-color: rgba(0, 0, 30, 0.6);
+  backdrop-filter: blur(8px);
   z-index: -1;
 }
 
@@ -98,7 +97,7 @@ a {
 
 /* Header Styles */
 .header {
-  background-color: rgba(26, 26, 26, 0.8);
+  background-color: rgba(26, 26, 26, 0.6);
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
@@ -110,8 +109,8 @@ a {
   z-index: 1000;
   width: 100%;
   box-sizing: border-box;
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .header .logo-text {
@@ -127,30 +126,31 @@ a {
 }
 
 .header .nav-buttons button {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .header .nav-buttons button.signup-button {
-  background-color: rgba(100, 108, 255, 0.8);
-  border: 1px solid rgba(100, 108, 255, 0.3);
+  background-color: rgba(100, 108, 255, 0.7);
+  border: 1px solid rgba(100, 108, 255, 0.25);
 }
 
 .header .nav-buttons button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .header .nav-buttons button.signup-button:hover {
-  background-color: rgba(100, 108, 255, 0.9);
+  background-color: rgba(100, 108, 255, 0.85);
 }
 
 /* Main Content Styles */
@@ -172,9 +172,9 @@ a {
   margin: 2rem 0;
   color: white;
   background-color: transparent;
-  backdrop-filter: blur(10px);
+  backdrop-filter: none;
   border: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .hero-section h1 {
@@ -187,7 +187,7 @@ a {
 
 .hero-section p {
   font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 2.5rem;
 }
 
@@ -200,33 +200,34 @@ a {
 .cta-buttons button {
   padding: 0.8rem 1.8rem;
   border-radius: 8px;
-  background-color: rgba(100, 108, 255, 0.8);
-  border: 1px solid rgba(100, 108, 255, 0.3);
+  background-color: rgba(100, 108, 255, 0.7);
+  border: 1px solid rgba(100, 108, 255, 0.25);
   color: white;
   cursor: pointer;
   font-size: 1.1rem;
   font-weight: 500;
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .cta-buttons button:hover {
-  background-color: rgba(100, 108, 255, 0.9);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: rgba(100, 108, 255, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Footer Styles */
 .footer {
-  background-color: rgba(26, 26, 26, 0.8);
+  background-color: rgba(26, 26, 26, 0.6);
   color: white;
   padding: 1.5rem 2rem;
   margin-top: auto;
   position: relative;
   z-index: 1000;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -269,90 +270,82 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  backdrop-filter: blur(5px);
 }
 
 .modal-content {
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
+  background-color: rgba(26, 26, 26, 0.7);
+  padding: 2.5rem;
   border-radius: 16px;
   width: 90%;
   max-width: 500px;
   position: relative;
-  color: #333;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-.close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-  z-index: 10;
-  transition: color 0.3s ease;
-}
-
-.close-button:hover {
-  color: #333;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .modal-content h2 {
-  color: #333;
+  font-size: 2.2rem;
   margin-bottom: 1.5rem;
-  font-size: 1.8rem;
-  text-align: center;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .form-group {
   margin-bottom: 1rem;
+  text-align: left;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #333;
-  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
   padding: 0.8rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: white;
   font-size: 1rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #333;
-  transition: all 0.3s ease;
+  outline: none;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  box-sizing: border-box;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  outline: none;
-  border-color: #646cff;
-  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+  border-color: rgba(100, 108, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .form-group input::placeholder {
-  color: #aaa;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .user-type-selector {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: white;
   justify-content: center;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-type-selector label {
@@ -360,29 +353,104 @@ a {
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  color: #333;
-  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.user-type-selector input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background-color: transparent;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-type-selector input[type="radio"]::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.3s ease;
+  box-shadow: inset 1em 1em rgba(100, 108, 255, 0.9);
+}
+
+.user-type-selector input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+.user-type-selector input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.5);
 }
 
 .submit-button {
   width: 100%;
-  margin-top: 1.5rem;
-  border: none;
-  background-color: rgba(100, 108, 255, 0.8);
-  color: white;
-  padding: 0.8rem 1.5rem;
+  padding: 1rem;
   border-radius: 8px;
+  background-color: rgba(100, 108, 255, 0.6);
+  border: 1px solid rgba(100, 108, 255, 0.2);
+  color: white;
+  cursor: pointer;
   font-size: 1.1rem;
   font-weight: 600;
-  cursor: pointer;
   transition: all 0.3s ease;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .submit-button:hover {
-  background-color: rgba(100, 108, 255, 0.9);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: rgba(100, 108, 255, 0.75);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.modal-content p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 1.5rem;
+}
+
+.modal-content p a {
+  color: #646cff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.modal-content p a:hover {
+  color: #7b83ff;
+  text-decoration: underline;
+}
+
+.close-button {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
 }
 
 /* Infinite Scroll Text */
@@ -397,7 +465,7 @@ a {
   margin-top: auto;
   position: relative;
   z-index: 1;
-  backdrop-filter: blur(10px);
+  backdrop-filter: none;
 }
 
 .scroll-text {
@@ -506,4 +574,54 @@ a {
   .scroll-text span {
     margin: 0 1.5rem;
   }
+}
+
+/* Feature Cards Section */
+.feature-cards-section {
+  padding: 0 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.features-title {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 3rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive 2x2 grid */
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background-color: rgba(26, 26, 26, 0.85); /* Dark, slightly transparent background */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); /* Stronger shadow for depth */
+  color: white;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+}
+
+.feature-card h3 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #646cff; /* Fallback for browsers not supporting gradients */
+  background: linear-gradient(90deg, #646cff, #a0a8ff); /* Gradient color */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+
+.feature-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
 }
