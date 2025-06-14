@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const LoginModal = ({ isOpen, onClose }) => {
   const [userType, setUserType] = useState('voter');
   const [formData, setFormData] = useState({
-    email: '',
+    usernameOrEmail: '',
     password: ''
   });
   const navigate = useNavigate();
@@ -25,12 +25,11 @@ const LoginModal = ({ isOpen, onClose }) => {
       });
 
       const data = await response.json();
-      
+
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userType', userType);
-        navigate(userType === 'voter' ? '/voter-dashboard' : '/committee-dashboard');
+        alert('Login successful!');
         onClose();
+        navigate(userType === 'voter' ? '/voter-dashboard' : '/committee-dashboard');
       } else {
         alert(data.message || 'Login failed');
       }
@@ -73,48 +72,23 @@ const LoginModal = ({ isOpen, onClose }) => {
           >
             Login
           </motion.h2>
-          <motion.div 
-            className="user-type-selector"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <label>
-              <input
-                type="radio"
-                value="voter"
-                checked={userType === 'voter'}
-                onChange={(e) => setUserType(e.target.value)}
-              />
-              Voter
-            </label>
-            <label>
-              <input
-                type="radio"
-                value="committee"
-                checked={userType === 'committee'}
-                onChange={(e) => setUserType(e.target.value)}
-              />
-              Committee Member
-            </label>
-          </motion.div>
           <motion.form 
             onSubmit={handleSubmit}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.2 }}
           >
             <motion.div 
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.3 }}
             >
-              <label>Email:</label>
+              <label>Username or Email:</label>
               <input
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                type="text"
+                value={formData.usernameOrEmail}
+                onChange={(e) => setFormData({...formData, usernameOrEmail: e.target.value})}
                 required
               />
             </motion.div>
@@ -122,7 +96,7 @@ const LoginModal = ({ isOpen, onClose }) => {
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4 }}
             >
               <label>Password:</label>
               <input
@@ -132,6 +106,33 @@ const LoginModal = ({ isOpen, onClose }) => {
                 required
               />
             </motion.div>
+            
+            <motion.div 
+              className="user-type-selector"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <label>
+                <input
+                  type="radio"
+                  value="voter"
+                  checked={userType === 'voter'}
+                  onChange={(e) => setUserType(e.target.value)}
+                />
+                Voter
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="committee"
+                  checked={userType === 'committee'}
+                  onChange={(e) => setUserType(e.target.value)}
+                />
+                Committee Member
+              </label>
+            </motion.div>
+
             <motion.button 
               type="submit" 
               className="submit-button"
@@ -144,6 +145,11 @@ const LoginModal = ({ isOpen, onClose }) => {
               Login
             </motion.button>
           </motion.form>
+          <p>Don't have an account? <a href="#" onClick={() => {
+            onClose();
+            // You might want to pass a prop to App.jsx to open SignupModal
+            // For now, this is a placeholder or you can handle it via context/redux
+          }}>Sign Up</a></p>
         </motion.div>
       </motion.div>
     </AnimatePresence>

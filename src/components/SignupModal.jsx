@@ -79,42 +79,17 @@ const SignupModal = ({ isOpen, onClose }) => {
           >
             Sign Up
           </motion.h2>
-          <motion.div 
-            className="user-type-selector"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            <label>
-              <input
-                type="radio"
-                value="voter"
-                checked={userType === 'voter'}
-                onChange={(e) => setUserType(e.target.value)}
-              />
-              Voter
-            </label>
-            <label>
-              <input
-                type="radio"
-                value="committee"
-                checked={userType === 'committee'}
-                onChange={(e) => setUserType(e.target.value)}
-              />
-              Committee Member
-            </label>
-          </motion.div>
           <motion.form 
             onSubmit={handleSubmit}
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.2 }}
           >
             <motion.div 
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.3 }}
             >
               <label>Username:</label>
               <input
@@ -128,7 +103,7 @@ const SignupModal = ({ isOpen, onClose }) => {
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4 }}
             >
               <label>Email:</label>
               <input
@@ -142,7 +117,7 @@ const SignupModal = ({ isOpen, onClose }) => {
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.5 }}
             >
               <label>Password:</label>
               <input
@@ -156,7 +131,7 @@ const SignupModal = ({ isOpen, onClose }) => {
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.7 }}
+              transition={{ delay: 0.6 }}
             >
               <label>Confirm Password:</label>
               <input
@@ -166,6 +141,33 @@ const SignupModal = ({ isOpen, onClose }) => {
                 required
               />
             </motion.div>
+            
+            <motion.div 
+              className="user-type-selector"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              <label>
+                <input
+                  type="radio"
+                  value="voter"
+                  checked={userType === 'voter'}
+                  onChange={(e) => setUserType(e.target.value)}
+                />
+                Voter
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="committee"
+                  checked={userType === 'committee'}
+                  onChange={(e) => setUserType(e.target.value)}
+                />
+                Committee Member
+              </label>
+            </motion.div>
+
             <motion.button 
               type="submit" 
               className="submit-button"
@@ -178,6 +180,7 @@ const SignupModal = ({ isOpen, onClose }) => {
               Sign Up
             </motion.button>
           </motion.form>
+          <p>Already have an account? <a href="#">Sign In</a></p>
         </motion.div>
       </motion.div>
     </AnimatePresence>
