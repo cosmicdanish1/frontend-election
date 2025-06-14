@@ -171,9 +171,9 @@ a {
   border-radius: 16px;
   margin: 2rem 0;
   color: white;
-  background-color: rgba(0, 0, 30, 0.6);
+  background-color: transparent;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
@@ -385,6 +385,51 @@ a {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+/* Infinite Scroll Text */
+.scroll-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: transparent;
+  padding: 1rem 0;
+  border-top: none;
+  border-bottom: none;
+  box-shadow: none;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(10px);
+}
+
+.scroll-text {
+  white-space: nowrap;
+  animation: scroll-left 60s linear infinite;
+  color: white;
+  font-size: 1.5rem;
+  padding: 0 1rem;
+  display: inline-block;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: 'Roboto', sans-serif;
+}
+
+.scroll-text span {
+  display: inline-block;
+  margin-right: 4rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.scroll-text span:hover {
+  transform: scale(1.1);
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
 /* Responsiveness */
 @media (max-width: 768px) {
   .header {
@@ -451,5 +496,14 @@ a {
   .submit-button {
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
+  }
+
+  .scroll-text {
+    font-size: 0.9rem;
+    animation: scroll-left 45s linear infinite;
+  }
+  
+  .scroll-text span {
+    margin: 0 1.5rem;
   }
 }
