@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const SignupModal = ({ isOpen, onClose }) => {
+const SignupModal = ({ isOpen, onClose, onAuthSuccess }) => {
   const [userType, setUserType] = useState('voter');
   const [formData, setFormData] = useState({
     username: '',
@@ -30,25 +30,37 @@ const SignupModal = ({ isOpen, onClose }) => {
     }
 
     try {
+      console.log('Sending registration data:', {
+        name: formData.username,
+        email: formData.email,
+        password: formData.password,
+        role: userType
+      });
+
       const response = await fetch('http://localhost:3000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
-          ...formData,
-          userType
+          name: formData.username,
+          email: formData.email,
+          password: formData.password,
+          role: userType
         }),
       });
 
       const data = await response.json();
+      console.log('Registration response:', data);
 
       if (response.ok) {
         alert('Registration successful!');
+        onAuthSuccess(data.user);
         onClose();
         navigate(userType === 'voter' ? '/voter-dashboard' : '/committee-dashboard');
       } else {
-        alert(data.message || 'Registration failed');
+        alert(data.error || data.message || 'Registration failed');
       }
     } catch (error) {
       console.error('Registration error:', error);

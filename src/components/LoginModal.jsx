@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const LoginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose, onAuthSuccess }) => {
   const [userType, setUserType] = useState('voter');
   const [formData, setFormData] = useState({
     usernameOrEmail: '',
@@ -29,8 +29,9 @@ const LoginModal = ({ isOpen, onClose }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
-          userType
+          email: formData.usernameOrEmail,
+          password: formData.password,
+          role: userType
         }),
       });
 
@@ -38,6 +39,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
       if (response.ok) {
         alert('Login successful!');
+        onAuthSuccess(data.user);
         onClose();
         navigate(userType === 'voter' ? '/voter-dashboard' : '/committee-dashboard');
       } else {
@@ -94,7 +96,7 @@ const LoginModal = ({ isOpen, onClose }) => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <label>Username or Email:</label>
+              <label>Email:</label>
               <input
                 type="text"
                 value={formData.usernameOrEmail}
