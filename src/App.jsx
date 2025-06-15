@@ -6,10 +6,11 @@ import Footer from './components/Footer';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import FeatureCards from './components/FeatureCards';
+import VoterDashboard from './components/VoterDashboard';
 import './App.css';
 
 // Placeholder components for dashboards
-const VoterDashboard = () => <div>Voter Dashboard</div>;
+// const VoterDashboard = () => <div>Voter Dashboard</div>;
 const CommitteeDashboard = () => <div>Committee Dashboard</div>;
 
 const App = () => {
@@ -19,9 +20,12 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   const handleAuthSuccess = (userData) => {
-    console.log('handleAuthSuccess received user data:', userData);
+    // Ensure userData.name exists, otherwise fallback to email or empty string
+    const userName = userData?.name || userData?.email || '';
+    
     setIsLoggedIn(true);
-    setCurrentUser(userData);
+    setCurrentUser({ ...userData, name: userName }); // Ensure name is always set
+    console.log('Current user state after handleAuthSuccess:', { isLoggedIn: true, currentUser: { ...userData, name: userName } }); // Final debug log
     setIsLoginModalOpen(false);
     setIsSignupModalOpen(false);
   };
