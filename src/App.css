@@ -2041,6 +2041,17 @@ a {
   }
 }
 
+/* ---- Candidate Management ---- */
+.cm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+.cm-tabs button{background:#2a2a2a;color:#fff;border:none;padding:0.4rem 0.8rem;margin-right:0.4rem;cursor:pointer;border-radius:4px;}
+.cm-tabs .active{background:#646cff;}
+.cm-add-btn{background:#61dafb;border:none;padding:0.4rem 0.8rem;cursor:pointer;border-radius:4px;}
+.cm-grid{width:100%;border-collapse:collapse;margin-top:1rem;}
+.cm-grid th,.cm-grid td{border:1px solid #444;padding:0.4rem;text-align:left;}
+.cm-grid th{background:#333;color:#61dafb;}
+.cm-form label{display:block;margin:0.6rem 0 0.3rem;}
+.cm-form input{width:100%;padding:0.5rem;border:1px solid #555;border-radius:4px;background:#222;color:#fff;}
+
 /* Hover Effects */
 .bento-tile:hover {
   transform: translateY(-2px);

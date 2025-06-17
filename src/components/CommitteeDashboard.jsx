@@ -1,6 +1,8 @@
 // frontend/src/components/CommitteeDashboard.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import CommitteeTile from './CommitteeTile';
+import CandidateManagement from './CandidateManagement';
 import '../App.css';
 
 const tiles = [
@@ -18,34 +20,27 @@ const CommitteeDashboard = () => {
   return (
     <motion.div className="voter-dashboard committee-dashboard">
       {tiles.map(t => (
-        <motion.div
-          key={t.key}
-          className={`bento-tile ${t.size || ''}`.trim()}
-          onClick={() => setSelected(t.key)}
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <h3>{t.title}</h3>
-          <p>{t.desc}</p>
-        </motion.div>
+        <CommitteeTile key={t.key} tile={t} onSelect={setSelected} />
       ))}
-
       <AnimatePresence>
         {selected && (
           <motion.div
-            key="expanded"
-            className="tile-expanded"
+            className="expanded-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
           >
-            <button className="close-button" onClick={() => setSelected(null)}>×</button>
-            <h2>{tiles.find(t => t.key === selected)?.title}</h2>
-            <p>Feature coming soon.</p>
+            <motion.div layoutId={selected} className="expanded-tile-content">
+              <button className="close-button" onClick={() => setSelected(null)}>×</button>
+              {selected === 'candidateManagement' ? (
+                <CandidateManagement onClose={() => setSelected(null)} />
+              ) : (
+                <>
+                  <h2>{tiles.find(t => t.key === selected)?.title}</h2>
+                  <p>Feature coming soon.</p>
+                </>
+              )}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
