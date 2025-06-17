@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import {  motion,AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LoginModal from './components/LoginModal';
 import SignupModal from './components/SignupModal';
 import FeatureCards from './components/FeatureCards';
 import VoterDashboard from './components/VoterDashboard';
+import CommitteeDashboard from './components/CommitteeDashboard';
 import './App.css';
 
-// Placeholder components for dashboards
-// const VoterDashboard = () => <div>Voter Dashboard</div>;
-const CommitteeDashboard = () => <div>Committee Dashboard</div>;
+// (Placeholder for voter already exists elsewhere)
 
 const App = () => {
   // Initialise from localStorage so we avoid a flash-redirect before useEffect runs
