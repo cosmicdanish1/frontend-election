@@ -14,41 +14,40 @@ import './App.css';
 const CommitteeDashboard = () => <div>Committee Dashboard</div>;
 
 const App = () => {
+  // Initialise from localStorage so we avoid a flash-redirect before useEffect runs
+  const storedUserJson = localStorage.getItem('currentUser');
+  const initialUser = storedUserJson ? JSON.parse(storedUserJson) : null;
+
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!initialUser);
+  const [currentUser, setCurrentUser] = useState(initialUser);
 
-  // Persist login state on app load
+  // Persist / verify login state on app load
   useEffect(() => {
-    // Check LocalStorage first
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
-      setIsLoggedIn(true);
-    } else {
-      // Fallback: ask backend if an active session exists (cookie-based)
-      fetch('http://localhost:3000/api/auth/me', {
-        credentials: 'include',
+    if (initialUser) return; // already have user from localStorage -> skip server check
+
+    // Fallback: ask backend if an active session exists (cookie-based)
+    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/auth/me`, {
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error('Not authenticated');
+        return res.json();
       })
-        .then((res) => {
-          if (!res.ok) throw new Error('Not authenticated');
-          return res.json();
-        })
-        .then((data) => {
-          if (data?.user) {
-            setCurrentUser(data.user);
-            setIsLoggedIn(true);
-            localStorage.setItem('currentUser', JSON.stringify(data.user));
-          }
-        })
-        .catch(() => {
-          // Not logged in – ensure clean state
-          setIsLoggedIn(false);
-          setCurrentUser(null);
-          localStorage.removeItem('currentUser');
-        });
-    }
+      .then((data) => {
+        if (data?.user) {
+          setCurrentUser(data.user);
+          setIsLoggedIn(true);
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
+        }
+      })
+      .catch(() => {
+        // Not logged in – ensure clean state
+        setIsLoggedIn(false);
+        setCurrentUser(null);
+        localStorage.removeItem('currentUser');
+      });
   }, []);
 
   const handleAuthSuccess = (userData) => {
