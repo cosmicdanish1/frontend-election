@@ -3,15 +3,20 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import '../App.css';
 
+const TYPES = ['Nagar', 'Lok Sabha', 'Vidhan Sabha'];
+
 const CandidateFormModal = ({ initial, electionType, onSave, onClose }) => {
   const [form, setForm] = useState(
     initial ?? {
       Name: '',
+      Gender: 'Male',
+      AadharId: '',
+      DOB: '',
+      Email: '',
+      ContactNumber: '',
       PartyName: '',
       LocationRegion: '',
       ElectionType: electionType,
-      // ElectionId will be set on backend via type mapping or you can add a select
-
     }
   );
 
@@ -68,12 +73,41 @@ const CandidateFormModal = ({ initial, electionType, onSave, onClose }) => {
               <input name="Name" value={form.Name} onChange={handleChange} required />
             </label>
             <label>
+              Gender
+              <select name="Gender" value={form.Gender} onChange={handleChange} required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </label>
+            <label>
+              Aadhar ID
+              <input name="AadharId" value={form.AadharId} onChange={handleChange} maxLength="12" required />
+            </label>
+            <label>
+              Date of Birth
+              <input type="date" name="DOB" value={form.DOB} onChange={handleChange} required />
+            </label>
+            <label>
+              Email
+              <input type="email" name="Email" value={form.Email} onChange={handleChange} required />
+            </label>
+            <label>
+              Contact No.
+              <input name="ContactNumber" value={form.ContactNumber} onChange={handleChange} required />
+            </label>
+            <label>
               Party
               <input name="PartyName" value={form.PartyName} onChange={handleChange} required />
             </label>
             <label>
               Place
               <input name="LocationRegion" value={form.LocationRegion} onChange={handleChange} required />
+            </label>
+            <label>
+              Election Type
+              <select name="ElectionType" value={form.ElectionType} onChange={handleChange} required>
+                {TYPES.map(t => <option key={t}>{t}</option>)}
+              </select>
             </label>
             <button type="submit" className="submit-button">
               {initial ? 'Save' : 'Add'}

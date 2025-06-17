@@ -11,9 +11,9 @@ const CandidateManagement = ({ onClose }) => {
   const [candidates, setCandidates] = useState([]);
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
+  const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || 'http://localhost:3000';
     fetch(`${API}/api/candidates`, { credentials: 'include' })
       .then(r => r.json())
       .then(setCandidates)
@@ -86,10 +86,16 @@ const CandidateManagement = ({ onClose }) => {
                   Edit
                 </button>
                 <button onClick={async () => {
-                  await fetch(`${API}/api/candidates/${c.CandidateId}`, {
-                    method: 'DELETE', credentials: 'include'
-                  });
-                  deleteCandidate(c.CandidateId);
+                  if (!window.confirm('Are you sure you want to delete this candidate?')) return;
+                  try {
+                    await fetch(`${API}/api/candidates/${c.CandidateId}`, {
+                      method: 'DELETE', credentials: 'include'
+                    });
+                    deleteCandidate(c.CandidateId);
+                  } catch (err) {
+                    console.error('Delete failed', err);
+                    alert('Failed to delete candidate');
+                  }
                 }}>Delete</button>
               </td>
             </tr>
