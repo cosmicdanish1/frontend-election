@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
@@ -19,12 +19,45 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
+  // Persist login state on app load
+  useEffect(() => {
+    // Check LocalStorage first
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+      setIsLoggedIn(true);
+    } else {
+      // Fallback: ask backend if an active session exists (cookie-based)
+      fetch('http://localhost:3000/api/auth/me', {
+        credentials: 'include',
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error('Not authenticated');
+          return res.json();
+        })
+        .then((data) => {
+          if (data?.user) {
+            setCurrentUser(data.user);
+            setIsLoggedIn(true);
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+          }
+        })
+        .catch(() => {
+          // Not logged in – ensure clean state
+          setIsLoggedIn(false);
+          setCurrentUser(null);
+          localStorage.removeItem('currentUser');
+        });
+    }
+  }, []);
+
   const handleAuthSuccess = (userData) => {
     // Ensure userData.name exists, otherwise fallback to email or empty string
     const userName = userData?.name || userData?.email || '';
     
     setIsLoggedIn(true);
     setCurrentUser({ ...userData, name: userName }); // Ensure name is always set
+    localStorage.setItem('currentUser', JSON.stringify({ ...userData, name: userName }));
     console.log('Current user state after handleAuthSuccess:', { isLoggedIn: true, currentUser: { ...userData, name: userName } }); // Final debug log
     setIsLoginModalOpen(false);
     setIsSignupModalOpen(false);
@@ -41,6 +74,7 @@ const App = () => {
         alert('Logged out successfully!');
         setIsLoggedIn(false);
         setCurrentUser(null);
+        localStorage.removeItem('currentUser');
         // Optionally navigate to home or login page after logout
         // navigate('/'); 
       } else {
@@ -115,7 +149,7 @@ const App = () => {
 
               </motion.div>
             )} />
-            <Route path="/voter-dashboard" element={<VoterDashboard />} />
+            <Route path="/voter-dashboard" element={isLoggedIn ? <VoterDashboard /> : <Navigate to="/" replace />} />
             <Route path="/committee-dashboard" element={<CommitteeDashboard />} />
           </Routes>
         </main>
