@@ -18,7 +18,7 @@ const CommitteeDashboard = () => {
   const [selected, setSelected] = useState(null);
 
   return (
-    <motion.div className="voter-dashboard committee-dashboard">
+    <motion.div className="voter-dashboard committee-dashboard" initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.15 }}>
       {tiles.map(t => (
         <CommitteeTile key={t.key} tile={t} onSelect={setSelected} />
       ))}
@@ -29,6 +29,7 @@ const CommitteeDashboard = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
           >
             <motion.div layoutId={selected} className="expanded-tile-content">
               <button className="close-button" onClick={() => setSelected(null)}>×</button>

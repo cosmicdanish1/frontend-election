@@ -14,11 +14,57 @@ const VoterDashboard = () => {
   const [candidates, setCandidates] = useState([]);
   const [isCandidateModalOpen, setIsCandidateModalOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [loadingProfile, setLoadingProfile] = useState(false);
+  const [errorProfile, setErrorProfile] = useState(null);
 
   useEffect(() => {
     fetchElections();
     fetchCandidates();
+    fetchUserProfile();
   }, []);
+
+  const fetchUserProfile = async () => {
+    console.log('🔍 === fetchUserProfile START ===');
+    console.log('🔍 Current axios defaults:', {
+      baseURL: axios.defaults.baseURL,
+      withCredentials: axios.defaults.withCredentials
+    });
+    
+    setLoadingProfile(true);
+    try {
+      console.log('🔍 Making request to /api/users/profile');
+      console.log('🔍 Request will be sent to:', `${axios.defaults.baseURL}/api/users/profile`);
+      
+      const response = await axios.get('/api/users/profile', {
+        withCredentials: true
+      });
+      
+      console.log('✅ Profile request successful');
+      console.log('🔍 Response status:', response.status);
+      console.log('🔍 Response headers:', response.headers);
+      console.log('🔍 Response data:', response.data);
+      
+      setUserProfile(response.data);
+    } catch (err) {
+      console.error('❌ Error fetching user profile:', err);
+      console.error('❌ Error response:', err.response);
+      console.error('❌ Error request:', err.request);
+      console.error('❌ Error message:', err.message);
+      console.error('❌ Error config:', err.config);
+      
+      if (err.response) {
+        console.error('❌ Response status:', err.response.status);
+        console.error('❌ Response data:', err.response.data);
+        console.error('❌ Response headers:', err.response.headers);
+      }
+      
+      setErrorProfile('Failed to load user profile.');
+    } finally {
+      setLoadingProfile(false);
+      console.log('🔍 === fetchUserProfile END ===');
+    }
+  };
 
   const fetchElections = async () => {
     setLoadingElections(true);
@@ -75,17 +121,30 @@ const VoterDashboard = () => {
 
   return (
     <motion.div className="voter-dashboard">
-      {/* Upcoming Election Countdown Tile (Large) */}
+      {/* Voter Profile Tile (Large) */}
       <motion.div
         className="bento-tile tile-large"
-        onClick={() => handleTileClick('countdown')}
+        onClick={() => handleTileClick('voterProfile')}
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
-        <h3>Upcoming Election Countdown</h3>
-        <p>Digital clock and countdown to the next election.</p>
-        {/* Content for Countdown Timer */}
+        <h3>Voter Profile</h3>
+        <p>View your personal information and voting status.</p>
+        {loadingProfile && <p>Loading profile...</p>}
+        {errorProfile && <p className="error-message">{errorProfile}</p>}
+        {userProfile && (
+          <div className="profile-preview">
+            <div className="profile-avatar">
+              <span>{userProfile.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}</span>
+            </div>
+            <div className="profile-info">
+              <h4>{userProfile.name || 'Name not set'}</h4>
+              <p>{userProfile.email}</p>
+              <p className="status-badge">{userProfile.status}</p>
+            </div>
+          </div>
+        )}
       </motion.div>
 
       {/* Candidate List Tile (Tall) */}
@@ -284,10 +343,118 @@ const VoterDashboard = () => {
                   <p>Detailed view of your voting history will be displayed here.</p>
                 </div>
               )}
-              {selectedTile === 'countdown' && (
-                <div className="countdown-expanded">
-                  <h2>Upcoming Election Countdown</h2>
-                  <p>Detailed countdown information here.</p>
+              {selectedTile === 'voterProfile' && (
+                <div className="voter-profile-expanded">
+                  <h2>Voter Profile</h2>
+                  {loadingProfile && <p>Loading profile...</p>}
+                  {errorProfile && <p className="error-message">{errorProfile}</p>}
+                  {userProfile && (
+                    <div className="profile-details">
+                      <div className="profile-header">
+                        <div className="profile-avatar-large">
+                          <span>{userProfile.name ? userProfile.name.charAt(0).toUpperCase() : 'U'}</span>
+                        </div>
+                        <div className="profile-basic-info">
+                          <h3>{userProfile.name || 'Name not set'}</h3>
+                          <p className="user-role">{userProfile.role}</p>
+                          <p className="user-status">
+                            Status: <span className={`status-badge ${userProfile.status}`}>{userProfile.status}</span>
+                          </p>
+                          {/* Eligibility message based on age */}
+                          {(() => {
+                            let eligible = false;
+                            let age = null;
+                            if (userProfile.date_of_birth) {
+                              const dob = new Date(userProfile.date_of_birth);
+                              const today = new Date();
+                              age = today.getFullYear() - dob.getFullYear();
+                              const m = today.getMonth() - dob.getMonth();
+                              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                                age--;
+                              }
+                              eligible = age >= 18;
+                            }
+                            if (age !== null) {
+                              return eligible ? (
+                                <div style={{ color: '#22c55e', fontWeight: 700, marginTop: 8 }}>
+                                  You are eligible to vote
+                                </div>
+                              ) : (
+                                <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 8 }}>
+                                  You are not eligible to vote
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
+                      </div>
+                      
+                      <div className="profile-sections">
+                        <div className="profile-section">
+                          <h4>Personal Information</h4>
+                          <div className="info-grid">
+                            <div className="info-item">
+                              <label>Full Name:</label>
+                              <span>{userProfile.name || 'Not provided'}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Gender:</label>
+                              <span>{userProfile.gender ? userProfile.gender.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Not provided'}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Date of Birth:</label>
+                              <span>{userProfile.date_of_birth ? new Date(userProfile.date_of_birth).toLocaleDateString() : 'Not provided'}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Email Address:</label>
+                              <span>{userProfile.email}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Contact Number:</label>
+                              <span>{userProfile.contact_number || 'Not provided'}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Aadhar ID:</label>
+                              <span>{userProfile.aadhar_id || 'Not provided'}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="profile-section">
+                          <h4>Address Information</h4>
+                          <div className="info-grid">
+                            <div className="info-item">
+                              <label>Address:</label>
+                              <span>{userProfile.address || 'Not provided'}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="profile-section">
+                          <h4>Account Information</h4>
+                          <div className="info-grid">
+                            <div className="info-item">
+                              <label>User ID:</label>
+                              <span>{userProfile.id}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Account Type:</label>
+                              <span className="role-badge">{userProfile.role}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Member Since:</label>
+                              <span>{new Date(userProfile.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <div className="info-item">
+                              <label>Last Updated:</label>
+                              <span>{new Date(userProfile.updated_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
               {selectedTile === 'electionResults' && (

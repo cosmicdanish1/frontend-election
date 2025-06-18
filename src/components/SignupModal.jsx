@@ -8,7 +8,9 @@ const SignupModal = ({ isOpen, onClose, onAuthSuccess }) => {
     username: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    gender: 'prefer_not_to_say',
+    dateOfBirth: ''
   });
   const [osClass, setOsClass] = useState('');
   const navigate = useNavigate();
@@ -34,7 +36,9 @@ const SignupModal = ({ isOpen, onClose, onAuthSuccess }) => {
         name: formData.username,
         email: formData.email,
         password: formData.password,
-        role: userType
+        role: userType,
+        gender: formData.gender,
+        date_of_birth: formData.dateOfBirth
       });
 
       const response = await fetch('http://localhost:3000/api/auth/register', {
@@ -47,7 +51,9 @@ const SignupModal = ({ isOpen, onClose, onAuthSuccess }) => {
           name: formData.username,
           email: formData.email,
           password: formData.password,
-          role: userType
+          role: userType,
+          gender: formData.gender,
+          date_of_birth: formData.dateOfBirth
         }),
       });
 
@@ -139,7 +145,39 @@ const SignupModal = ({ isOpen, onClose, onAuthSuccess }) => {
               className="form-group"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.45 }}
+            >
+              <label>Gender:</label>
+              <select
+                value={formData.gender}
+                onChange={(e) => setFormData({...formData, gender: e.target.value})}
+                required
+              >
+                <option value="prefer_not_to_say">Prefer not to say</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </motion.div>
+            <motion.div 
+              className="form-group"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
+            >
+              <label>Date of Birth:</label>
+              <input
+                type="date"
+                value={formData.dateOfBirth}
+                onChange={(e) => setFormData({...formData, dateOfBirth: e.target.value})}
+                required
+              />
+            </motion.div>
+            <motion.div 
+              className="form-group"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.55 }}
             >
               <label>Password:</label>
               <input

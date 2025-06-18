@@ -316,22 +316,33 @@ a {
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(255, 255, 255, 0.1);
   color: white;
   font-size: 1rem;
-  outline: none;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
   box-sizing: border-box;
-  text-shadow: 0 0 0.5px rgba(0, 0, 0, 0.4);
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: rgba(100, 108, 255, 0.8);
-  background-color: rgba(255, 255, 255, 0.1);
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select option {
+  background-color: #1a1a1a;
+  color: white;
+  padding: 8px;
 }
 
 .form-group input::placeholder {
@@ -447,10 +458,8 @@ a {
 }
 
 .close-button:hover {
-  background-color: rgba(35, 35, 35, 0.9); /* Slightly darker on hover */
-  transform: scale(1.05);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Slightly more pronounced shadow on hover */
-  border-radius: 6px; /* Keep consistent on hover */
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
 /* Small Mobile (320px and up) */
@@ -2041,6 +2050,14 @@ a {
   }
 }
 
+/* mini preview cards in dashboard tiles */
+.tile-preview{display:grid;grid-auto-flow:column;gap:8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;margin-top:6px;max-width:136px;}
+.tile-preview::-webkit-scrollbar{display:none;}
+.tile-preview::-webkit-scrollbar{display:none;}
+.preview-card{flex:0 0 auto;background:#282828;width:60px;height:60px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#61dafb;text-align:center;white-space:normal;padding:4px;}
+
+.tile-hint{color:#888;font-size:0.65rem;display:block;margin-top:2px;}
+
 /* ---- Candidate Management ---- */
 .cm-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
 .cm-tabs button{background:#2a2a2a;color:#fff;border:none;padding:0.4rem 0.8rem;margin-right:0.4rem;cursor:pointer;border-radius:4px;}
@@ -2097,4 +2114,398 @@ a {
 
 .close-button:hover {
   color: #fff;
+}
+
+/* Voter Profile Styles */
+.profile-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 32px 16px 24px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.profile-info h4 {
+  margin: 16px 0 6px 0;
+  font-size: 2rem;
+  color: white;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.profile-info p {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.profile-info p:last-child {
+  margin-bottom: 0;
+}
+
+.status-badge.active {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  box-shadow: 0 0 12px 2px #22c55e, 0 2px 8px rgba(34, 197, 94, 0.2);
+  font-weight: 700;
+}
+
+.status-badge.inactive {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Expanded Voter Profile Styles */
+.voter-profile-expanded {
+  padding: 0;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.voter-profile-expanded h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: white;
+  font-size: 2rem;
+  padding: 0 20px;
+}
+
+.profile-details {
+  background: #1a1a1a;
+  border-radius: 0;
+  padding: 0;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 0;
+  padding: 32px;
+  border-bottom: 2px solid #333;
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+}
+
+.profile-avatar-large {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #646cff, #61dafb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 6px 20px rgba(100, 108, 255, 0.4);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-basic-info h3 {
+  margin: 0 0 12px 0;
+  font-size: 2rem;
+  color: white;
+  font-weight: 600;
+}
+
+.user-role {
+  margin: 0 0 12px 0;
+  font-size: 1.1rem;
+  color: #61dafb;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.user-status {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.profile-sections {
+  display: grid;
+  gap: 0;
+  padding: 0;
+}
+
+.profile-section {
+  background: #1a1a1a;
+  border-radius: 0;
+  padding: 32px;
+  border: none;
+  border-bottom: 1px solid #333;
+}
+
+.profile-section:last-child {
+  border-bottom: none;
+}
+
+.profile-section h4 {
+  margin: 0 0 24px 0;
+  font-size: 1.4rem;
+  color: #61dafb;
+  border-bottom: 2px solid #333;
+  padding-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #333;
+  transition: background-color 0.2s ease;
+}
+
+.info-item:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  border-radius: 4px;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 140px;
+}
+
+.info-item span {
+  color: white;
+  font-size: 1rem;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+.role-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #646cff, #61dafb);
+  color: white;
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.3);
+}
+
+/* Update the bento-expanded-content specifically for voter profile */
+.bento-expanded-content:has(.voter-profile-expanded) {
+  background: #1a1a1a;
+  border-radius: 0;
+  padding: 0;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  border: none;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Responsive Design for Profile */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+    padding: 24px;
+  }
+  
+  .profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    font-size: 2rem;
+  }
+  
+  .profile-basic-info h3 {
+    font-size: 1.8rem;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 20px 0;
+  }
+  
+  .info-item:hover {
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+  
+  .info-item label {
+    min-width: auto;
+    font-size: 0.9rem;
+  }
+  
+  .info-item span {
+    max-width: 100%;
+    text-align: left;
+    font-size: 0.95rem;
+  }
+  
+  .voter-profile-expanded {
+    padding: 0;
+  }
+  
+  .profile-details {
+    padding: 0;
+  }
+  
+  .profile-section {
+    padding: 24px;
+  }
+  
+  .bento-expanded-content:has(.voter-profile-expanded) {
+    padding: 0;
+    margin: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-sections {
+    gap: 0;
+  }
+  
+  .profile-section {
+    padding: 20px;
+  }
+  
+  .info-grid {
+    gap: 12px;
+  }
+  
+  .profile-header {
+    padding: 20px;
+  }
+  
+  .profile-avatar-large {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+  }
+  
+  .profile-basic-info h3 {
+    font-size: 1.6rem;
+  }
+}
+
+.bento-expanded-content:has(.voter-profile-expanded) {
+  border-radius: 18px;
+}
+
+.voter-profile-expanded {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.profile-details {
+  border-radius: 16px;
+}
+
+.profile-section {
+  border-radius: 12px;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #646cff, #61dafb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 16px rgba(100, 108, 255, 0.4);
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  margin-bottom: 8px;
+}
+
+.profile-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+  padding: 32px 16px 24px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Hide scrollbars in voter profile modal and its content */
+.bento-expanded-content,
+.voter-profile-expanded,
+.profile-details,
+.profile-section {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.bento-expanded-content::-webkit-scrollbar,
+.voter-profile-expanded::-webkit-scrollbar,
+.profile-details::-webkit-scrollbar,
+.profile-section::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Hide all scrollbars globally */
+body, * {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+body::-webkit-scrollbar, *::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
 }

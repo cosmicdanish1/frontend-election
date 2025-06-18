@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import {  motion,AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -24,39 +24,70 @@ const App = () => {
 
   // Persist / verify login state on app load
   useEffect(() => {
-    if (initialUser) return; // already have user from localStorage -> skip server check
-
-    // Fallback: ask backend if an active session exists (cookie-based)
-    fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/auth/me`, {
+    console.log('🔍 === App useEffect START ===');
+    console.log('🔍 Initial user from localStorage:', initialUser);
+    console.log('🔍 Current isLoggedIn state:', isLoggedIn);
+    console.log('🔍 Current currentUser state:', currentUser);
+    
+    // Always check server session, even if we have localStorage data
+    console.log('🔍 Checking server session...');
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    console.log('🔍 API URL:', apiUrl);
+    
+    fetch(`${apiUrl}/api/auth/me`, {
       credentials: 'include',
     })
       .then((res) => {
-        if (!res.ok) throw new Error('Not authenticated');
+        console.log('🔍 /api/auth/me response status:', res.status);
+        console.log('🔍 /api/auth/me response headers:', res.headers);
+        
+        if (!res.ok) {
+          console.log('❌ /api/auth/me not ok, clearing cached data');
+          throw new Error('Not authenticated');
+        }
         return res.json();
       })
       .then((data) => {
+        console.log('✅ /api/auth/me successful, data:', data);
         if (data?.user) {
+          console.log('✅ Setting user from server session');
           setCurrentUser(data.user);
           setIsLoggedIn(true);
           localStorage.setItem('currentUser', JSON.stringify(data.user));
+        } else {
+          console.log('❌ No user data in response');
         }
       })
-      .catch(() => {
-        // Not logged in – ensure clean state
+      .catch((error) => {
+        console.log('❌ /api/auth/me failed:', error.message);
+        // Clear cached data and ensure clean state
         setIsLoggedIn(false);
         setCurrentUser(null);
         localStorage.removeItem('currentUser');
+      })
+      .finally(() => {
+        console.log('🔍 === App useEffect END ===');
       });
   }, []);
 
   const handleAuthSuccess = (userData) => {
+    console.log('🔍 === handleAuthSuccess START ===');
+    console.log('🔍 Received userData:', userData);
+    
     // Ensure userData.name exists, otherwise fallback to email or empty string
     const userName = userData?.name || userData?.email || '';
+    console.log('🔍 Extracted userName:', userName);
+    
+    const finalUserData = { ...userData, name: userName };
+    console.log('🔍 Final user data to set:', finalUserData);
     
     setIsLoggedIn(true);
-    setCurrentUser({ ...userData, name: userName }); // Ensure name is always set
-    localStorage.setItem('currentUser', JSON.stringify({ ...userData, name: userName }));
-    console.log('Current user state after handleAuthSuccess:', { isLoggedIn: true, currentUser: { ...userData, name: userName } }); // Final debug log
+    setCurrentUser(finalUserData); // Ensure name is always set
+    localStorage.setItem('currentUser', JSON.stringify(finalUserData));
+    
+    console.log('✅ Authentication state updated');
+    console.log('🔍 === handleAuthSuccess END ===');
+    
     setIsLoginModalOpen(false);
     setIsSignupModalOpen(false);
   };
@@ -69,12 +100,16 @@ const App = () => {
       });
 
       if (response.ok) {
-        alert('Logged out successfully!');
+        // Clear local state
         setIsLoggedIn(false);
         setCurrentUser(null);
         localStorage.removeItem('currentUser');
-        // Optionally navigate to home or login page after logout
-        // navigate('/'); 
+        
+        // Show success message
+        alert('Logged out successfully!');
+        
+        // Redirect to landing page
+        window.location.href = '/';
       } else {
         const data = await response.json();
         alert(data.message || 'Logout failed');
@@ -148,7 +183,11 @@ const App = () => {
               </motion.div>
             )} />
             <Route path="/voter-dashboard" element={isLoggedIn ? <VoterDashboard /> : <Navigate to="/" replace />} />
-            <Route path="/committee-dashboard" element={<CommitteeDashboard />} />
+            <Route path="/committee-dashboard" element={
+              isLoggedIn && currentUser?.role === 'committee' ? 
+                <CommitteeDashboard /> : 
+                <Navigate to="/" replace />
+            } />
           </Routes>
         </main>
 
