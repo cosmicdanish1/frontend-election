@@ -5,7 +5,7 @@ import CandidateDetailModal from './CandidateDetailModal';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const RegisterModal = ({ isOpen, onClose, onRegisterSuccess }) => {
+const RegisterModal = ({ isOpen, onClose, onRegisterSuccess, currentUser }) => {
   const [form, setForm] = useState({
     aadhar: '',
     voterId: '',
@@ -33,23 +33,40 @@ const RegisterModal = ({ isOpen, onClose, onRegisterSuccess }) => {
     if (isNaN(age) || age < 18) {
       return 'You must be at least 18 years old to register.';
     }
-    // Add more validation as needed (Aadhar format, etc.)
     return '';
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationError = validate();
     if (validationError) {
       setError(validationError);
       return;
     }
-    setSuccess(true);
-    setTimeout(() => {
-      setSuccess(false);
-      onRegisterSuccess(form);
-      onClose();
-    }, 1200);
+    const userid = currentUser?.id || currentUser?.userid;
+    console.log('Registering with userid:', userid, 'currentUser:', currentUser);
+    if (!userid) {
+      setError('User ID not found. Please reload the page and try again.');
+      return;
+    }
+    try {
+      await axios.post('/api/voter-registration', {
+        userid,
+        aadharid: form.aadhar,
+        votercardid: form.voterId,
+        dob: form.dob,
+        address: form.address,
+        nationality: form.nationality
+      });
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        onRegisterSuccess(form);
+        onClose();
+      }, 1200);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Registration failed.');
+    }
   };
 
   if (!isOpen) return null;
@@ -221,13 +238,22 @@ const VoterDashboard = () => {
       {/* Register Card (Wide, Top) */}
       <motion.div
         className="bento-tile tile-wide"
-        onClick={() => setIsRegisterModalOpen(true)}
+        onClick={() => userProfile && userProfile.id ? setIsRegisterModalOpen(true) : null}
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
-        style={{ marginBottom: '1.5rem' }}
+        style={{
+          marginBottom: '1.5rem',
+          opacity: userProfile && userProfile.id ? 1 : 0.5,
+          pointerEvents: userProfile && userProfile.id ? 'auto' : 'none'
+        }}
       >
         <h3>Register Card</h3>
+        {loadingProfile && <p>Loading your profile...</p>}
+        {errorProfile && <p className="error-message">{errorProfile}</p>}
+        {!loadingProfile && !errorProfile && !(userProfile && userProfile.id) && (
+          <p>Profile not loaded. Please refresh or log in again.</p>
+        )}
         <p>Register for upcoming elections or as a new voter. (Click to register)</p>
       </motion.div>
 
@@ -562,6 +588,7 @@ const VoterDashboard = () => {
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
         onRegisterSuccess={() => setIsRegistered(true)}
+        currentUser={userProfile}
       />
 
     </motion.div>
