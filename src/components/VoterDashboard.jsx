@@ -5,6 +5,97 @@ import CandidateDetailModal from './CandidateDetailModal';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const RegisterModal = ({ isOpen, onClose, onRegisterSuccess }) => {
+  const [form, setForm] = useState({
+    aadhar: '',
+    voterId: '',
+    address: '',
+    dob: '',
+    nationality: '',
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError('');
+  };
+
+  const validate = () => {
+    if (!form.aadhar || !form.voterId || !form.address || !form.dob || !form.nationality) {
+      return 'All fields are required.';
+    }
+    if (form.nationality.trim().toLowerCase() !== 'indian') {
+      return 'Only Indian nationals can register.';
+    }
+    const dobDate = new Date(form.dob);
+    const age = ((new Date()).getTime() - dobDate.getTime()) / (1000 * 3600 * 24 * 365.25);
+    if (isNaN(age) || age < 18) {
+      return 'You must be at least 18 years old to register.';
+    }
+    // Add more validation as needed (Aadhar format, etc.)
+    return '';
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const validationError = validate();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+    setSuccess(true);
+    setTimeout(() => {
+      setSuccess(false);
+      onRegisterSuccess(form);
+      onClose();
+    }, 1200);
+  };
+
+  if (!isOpen) return null;
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Voter Registration</h2>
+        {error && <div className="error-message">{error}</div>}
+        {success ? (
+          <div className="success-message">Registration successful!</div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Aadhar Number</label>
+              <input name="aadhar" value={form.aadhar} onChange={handleChange} maxLength={12} required />
+            </div>
+            <div className="form-group">
+              <label>Voter Card ID</label>
+              <input name="voterId" value={form.voterId} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Address</label>
+              <input name="address" value={form.address} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Date of Birth</label>
+              <input name="dob" type="date" value={form.dob} onChange={handleChange} required />
+            </div>
+            <div className="form-group">
+              <label>Nationality</label>
+              <select name="nationality" value={form.nationality} onChange={handleChange} required>
+                <option value="">Select Nationality</option>
+                <option value="indian">Indian</option>
+                <option value="nri">NRI</option>
+                <option value="non-india">Non-India</option>
+              </select>
+            </div>
+            <button type="submit" className="submit-button">Register</button>
+            <button type="button" className="close-button" onClick={onClose}>Cancel</button>
+          </form>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const VoterDashboard = () => {
   const navigate = useNavigate();
   const [selectedTile, setSelectedTile] = useState(null);
@@ -17,6 +108,8 @@ const VoterDashboard = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [errorProfile, setErrorProfile] = useState(null);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   useEffect(() => {
     fetchElections();
@@ -114,6 +207,10 @@ const VoterDashboard = () => {
   };
 
   const handleVoteClick = (electionId) => {
+    if (!isRegistered) {
+      alert('You must register as a voter before you can vote.');
+      return;
+    }
     navigate(`/vote/${electionId}`);
   };
 
@@ -121,6 +218,19 @@ const VoterDashboard = () => {
 
   return (
     <motion.div className="voter-dashboard">
+      {/* Register Card (Wide, Top) */}
+      <motion.div
+        className="bento-tile tile-wide"
+        onClick={() => setIsRegisterModalOpen(true)}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+        style={{ marginBottom: '1.5rem' }}
+      >
+        <h3>Register Card</h3>
+        <p>Register for upcoming elections or as a new voter. (Click to register)</p>
+      </motion.div>
+
       {/* Voter Profile Tile (Large) */}
       <motion.div
         className="bento-tile tile-large"
@@ -360,33 +470,6 @@ const VoterDashboard = () => {
                           <p className="user-status">
                             Status: <span className={`status-badge ${userProfile.status}`}>{userProfile.status}</span>
                           </p>
-                          {/* Eligibility message based on age */}
-                          {(() => {
-                            let eligible = false;
-                            let age = null;
-                            if (userProfile.date_of_birth) {
-                              const dob = new Date(userProfile.date_of_birth);
-                              const today = new Date();
-                              age = today.getFullYear() - dob.getFullYear();
-                              const m = today.getMonth() - dob.getMonth();
-                              if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                                age--;
-                              }
-                              eligible = age >= 18;
-                            }
-                            if (age !== null) {
-                              return eligible ? (
-                                <div style={{ color: '#22c55e', fontWeight: 700, marginTop: 8 }}>
-                                  You are eligible to vote
-                                </div>
-                              ) : (
-                                <div style={{ color: '#ef4444', fontWeight: 700, marginTop: 8 }}>
-                                  You are not eligible to vote
-                                </div>
-                              );
-                            }
-                            return null;
-                          })()}
                         </div>
                       </div>
                       
@@ -473,6 +556,12 @@ const VoterDashboard = () => {
         candidate={selectedCandidate}
         isOpen={isCandidateModalOpen}
         onClose={() => setIsCandidateModalOpen(false)}
+      />
+
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        onRegisterSuccess={() => setIsRegistered(true)}
       />
 
     </motion.div>

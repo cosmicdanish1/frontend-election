@@ -21,6 +21,8 @@ const App = () => {
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(!!initialUser);
   const [currentUser, setCurrentUser] = useState(initialUser);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   // Persist / verify login state on app load
   useEffect(() => {
@@ -134,6 +136,8 @@ const App = () => {
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
           onLogout={handleLogout}
+          onRegisterClick={() => setIsRegisterModalOpen(true)}
+          onProfileClick={() => setIsProfileModalOpen(true)}
         />
         
         <main className="main-content">
@@ -232,6 +236,15 @@ const App = () => {
               onClose={() => setIsSignupModalOpen(false)}
               onAuthSuccess={handleAuthSuccess}
             />
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {isRegisterModalOpen && (
+            <div className="modal-overlay"><div className="modal-content"><h2>Register (Coming Soon)</h2><button onClick={() => setIsRegisterModalOpen(false)}>Close</button></div></div>
+          )}
+          {isProfileModalOpen && (
+            <div className="modal-overlay"><div className="modal-content"><h2>My Profile (Coming Soon)</h2><button onClick={() => setIsProfileModalOpen(false)}>Close</button></div></div>
           )}
         </AnimatePresence>
       </motion.div>
